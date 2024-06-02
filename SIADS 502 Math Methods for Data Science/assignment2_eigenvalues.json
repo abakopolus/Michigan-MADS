@@ -1,0 +1,1210 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "791b8541b8936283ab6178713907b41d",
+     "grade": false,
+     "grade_id": "cell-a2d42e109d5a4446",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "# SIADS 502: Math Methods for Data Science \n",
+    "\n",
+    "\n",
+    "# School of Information, University of Michigan\n",
+    "\n",
+    "\n",
+    "## Week2: Eigenvalue/Eigenvector/Linear Trasformation\n",
+    "\n",
+    "### Version 1.2\n",
+    "\n",
+    "This assignment is designed to demonstrate basic linear algebra and computational properties of matrices through identifying linearity across vectors, using row reduction to calculate eigenvalues and eigenvectors. Please read the directions carefully, as we want to avoid submissions that are marked incorrect due to formatting mistakes. You will be using sympy, numpy, and scipy for this assignment. \n",
+    "\n",
+    "Ensure that the following code is present at the beginning of your assignment:\n",
+    "- from sympy import *\n",
+    "- import numpy as np\n",
+    "- from numpy import linalg\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Please enter your name: \"\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "e8233e474cb3078d25b2045117ffe093",
+     "grade": false,
+     "grade_id": "cell-2ec3375c714bff40",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "## Part 1: Linear (In)dependence\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "d0a24edfe2561dbc8290c446eee91814",
+     "grade": false,
+     "grade_id": "cell-34ab2f1da94f850b",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<b>1.0</b> In this section, we will be determining if a set of vectors are linearly independent (if they are not, then they are linearly dependent). Below you will be asked to write a function to decide if 2, 3, or 4 inputed vectors in $\\mathbf{R}^3$ are linearly independent.  \n",
+    "\n",
+    "\n",
+    "    \n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "ef115a907043a1d77932d85c9d027d69",
+     "grade": false,
+     "grade_id": "cell-91d40d41fc3261a7",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "from sympy import *\n",
+    "import numpy as np\n",
+    "from scipy import linalg\n",
+    "from numpy import linalg\n",
+    "import pandas as pd\n",
+    "from sklearn.decomposition import PCA\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "Senate = pd.read_csv('assets/senate.txt')\n",
+    "RB = pd.read_csv('assets/red_blue.txt', ' ')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "df64a5c8f177e4c5112cb34af1350d08",
+     "grade": false,
+     "grade_id": "cell-a75b03836816e39c",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "#uncomment the below line to view snippet of txt file\n",
+    "#Senate.head()\n",
+    "#RB.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "e5e6854b6144e59b3ffe2609c80ea243",
+     "grade": false,
+     "grade_id": "cell-1b3452e8f5584c8a",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>1.1</strong> \\[2 pt\\] Impliment the function Indy2Vec that takes in two 3 dimentional vectors each represented as an array and tells whether they are linearly independent.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "b6c0b10d230805049576022bfe8b0716",
+     "grade": false,
+     "grade_id": "cell-411ec698d9ae862d",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "def Indy2Vec(v1, v2):\n",
+    "    stacked = np.stack((v1, v2))\n",
+    "    rank = np.linalg.matrix_rank(stacked)\n",
+    "    return rank == 2\n",
+    "    \n",
+    "#raise NotImplementedError()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "902f227a5075fac2d092d32c4baf0129",
+     "grade": true,
+     "grade_id": "cell-45a28a1ab4ac003c",
+     "locked": true,
+     "points": 2,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "v1 = np.array([0, 5, 0])\n",
+    "v2 = np.array([0, -10, 0])\n",
+    "v3 = np.array([1, 2, 3])\n",
+    "v4 = np.array([-2, -4, -6])\n",
+    "assert Indy2Vec(v1, v2) == False, \"Problem 1.1, Your code said that two linearly dependent vectors were independent\"\n",
+    "assert Indy2Vec(v3, v4) == False, \"Problem 1.1, Your code said that two linearly dependent vectors were independent\"\n",
+    "assert Indy2Vec(v1, v3) == True, \"Problem 1.1, Your code said that two linearly independent vectors were dependent\"\n",
+    "assert Indy2Vec(v2, v3) == True, \"Problem 1.1, Your code said that two linearly independent vectors were dependent\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "fbe72fd0dee166cf518ca6ee8ae8c0f9",
+     "grade": false,
+     "grade_id": "cell-d8dee39f31ad0c14",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>1.2</strong> \\[2 pt\\] Impliment the function Indy2Vec that takes in three 3 dimentional vectors each represented as an array and tells whether they are linearly independent."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "462648ea46b3dc7cb9cd97e1941f9800",
+     "grade": false,
+     "grade_id": "cell-9437cf7256c37d72",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "def Indy3Vec(v1, v2, v3):\n",
+    "    stacked = np.stack((v1, v2, v3))\n",
+    "    rank = np.linalg.matrix_rank(stacked)\n",
+    "    return rank == 3\n",
+    "    \n",
+    "\n",
+    "#raise NotImplementedError()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "27d221a7de42aceb32c4833275313efd",
+     "grade": true,
+     "grade_id": "cell-158e70c4cabaca4d",
+     "locked": true,
+     "points": 2,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "v1=np.array([-1,3,4])\n",
+    "v2=np.array([6,-2,9])\n",
+    "v3=np.array([3,8,5]) \n",
+    "\n",
+    "assert Indy3Vec(v1, v2, v3) == True, \"Problem 1.2, Your code said that two linearly independent vectors were dependent\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "79267a97b8574487d1ec5b8f889864cc",
+     "grade": false,
+     "grade_id": "cell-ce5dcd32393db2e4",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>1.3</strong> \\[1 pt\\] Impliment the function Indy4Vec that takes in four 3 dimentional vectors each represented as an array and tells whether they are linearly independent."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "8968c0ae2b8b86de37944cc442adb08c",
+     "grade": false,
+     "grade_id": "cell-d68d4ff3c19a01a9",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "def Indy4Vec(v1, v2, v3, v4):\n",
+    "    stacked = np.stack((v1, v2, v3, v4))\n",
+    "    rank = np.linalg.matrix_rank(stacked)\n",
+    "    return rank == 4\n",
+    "    \n",
+    "#raise NotImplementedError()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "41650b8b6c936021e3cd8c5240c53901",
+     "grade": true,
+     "grade_id": "cell-1b83b01be1cc2c58",
+     "locked": true,
+     "points": 1,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "v1=np.array([-1,3,4])\n",
+    "v2=np.array([6,-2,9])\n",
+    "v3=np.array([3,8,5])\n",
+    "v4=np.array([5,6,7])\n",
+    "\n",
+    "\n",
+    "assert Indy4Vec(v1, v2, v3, v4) == False, \"Problem 1.3, Your code said that two linearly dependent vectors were independent\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "6a477fc10d8ffea45fadcbbcb34c578c",
+     "grade": false,
+     "grade_id": "cell-ce5dcd323933b2c5",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>1.4</strong> \\[2 pt\\] Impliment the function ThreeVec that takes in three 3 dimentional vectors each represented as an array,stacks the arrays vertically (each array is a row in a matrix), and returns a list in which the first element is the rank of the matrix, the second element is the rank of its transpose, the third element is its determinant rounded to two decimal places, the fourth element is the first element of its inverse rounded to two decimal places if its inverse exists and is the string \"no inverse\" if it does not exist.\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "f30150c5bffe66c9ec0005c451874cb9",
+     "grade": false,
+     "grade_id": "cell-d68d4ff3c19a01b8",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "def ThreeVec(v1, v2, v3):\n",
+    "    stacked = np.stack((v1, v2, v3))\n",
+    "    rank = np.linalg.matrix_rank(stacked)\n",
+    "    rank_t = np.linalg.matrix_rank(stacked.transpose())\n",
+    "    det = np.linalg.det(stacked)\n",
+    "    det = round(det, 2)\n",
+    "    if det == 0:\n",
+    "        inverse = 'no inverse'\n",
+    "    else:\n",
+    "        inverse = round(np.linalg.inv(stacked)[0][0], 2)\n",
+    "    list_final = [rank, rank_t, det, inverse]\n",
+    "    return list_final\n",
+    "    \n",
+    "\n",
+    "#raise NotImplementedError()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "a0c49744387eea547c6cff93d72cdb42",
+     "grade": true,
+     "grade_id": "cell-1b83b01be1cc2c59",
+     "locked": true,
+     "points": 2,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "v1=np.array([10,4.4,13])\n",
+    "v2=np.array([-5,-3.1,4])\n",
+    "v3=np.array([15,5.7,30])\n",
+    "\n",
+    "\n",
+    "\n",
+    "assert(ThreeVec(v1, v2, v3) == [2, 2, 0.0, 'no inverse']), \"Problem 1.4, Your function does not compute the example correctly.\"\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "f48847c7647a3eb6c28eceec54bae0f0",
+     "grade": false,
+     "grade_id": "cell-491353b73a7996d6",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>1.5</strong> [3 pt] Given a matrix $A$ (as an np.array), return a vector $v$ as an np.array with shape $(3, )$ in a way that depends on the injective, surjective, and bijective properties of $A$.  \n",
+    "\n",
+    "If $A$ it is bijective, return a vector $v$ such that $Av=\\left(\\begin{array}{c} 1 \\\\ 2 \\\\ 1 \\end{array} \\right)$. \n",
+    "\n",
+    "If $A$ is not bijective because it is not injective, return a vector $v$ (that does not equal $\\left(\\begin{array}{c} 1 \\\\ 1 \\\\ 1 \\end{array} \\right)$) such that $Av= A\\left(\\begin{array}{c} 1 \\\\ 1 \\\\ 1 \\end{array} \\right)$. \n",
+    "\n",
+    "If $A$ is not bijective because it is not  surjective, return a vector $v$ where the first two coordinate of $v$ are 1 and $v= Ax$ for some vector $x$.  (E.g. $v = \\left(\\begin{array}{c} 1 \\\\ 1 \\\\ z \\end{array} \\right)$ for the correct value of $z$.)\n",
+    "\n",
+    "Note that for this problem $A$ will always either be surjective or injective.  \n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "a7787925372a1eb8a2d0553a0a5766fe",
+     "grade": false,
+     "grade_id": "cell-2e9331963645ff57",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "(a) A= np.array([[1,2,3],[2,1,1]])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "1bfda33c344ce7378c36ba2bc1d171f7",
+     "grade": false,
+     "grade_id": "cell-8a68552e1d4594c1",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "A= np.array([[1,2,3],[2,1,1]])\n",
+    "rank = np.linalg.matrix_rank(A) #rank = 2 and is surjective\n",
+    "\n",
+    "b = np.array([1,1,1])\n",
+    "A_b = A @ b\n",
+    "A_inv = np.linalg.pinv(A)\n",
+    "\n",
+    "v= A_inv @ A_b\n",
+    "\n",
+    "#raise NotImplementedError()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "8f186cdbc93dff530df643aefc97aa39",
+     "grade": true,
+     "grade_id": "cell-47dbc27cae300c5c",
+     "locked": true,
+     "points": 1,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "#hidden tests for problem 1.5(a) are within this cell"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "1e65c5bee65f2715bff53a737cc7650a",
+     "grade": false,
+     "grade_id": "cell-dbab8340b38ab693",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "(b) A= np.array([[1,2],[3,4],[10,6]])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "1f3ec3043d81ae4ba4273c2746c3676f",
+     "grade": false,
+     "grade_id": "cell-37020c83f0c7c7fc",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "A= np.array([[1,2],[3,4],[10,6]])\n",
+    "rank = np.linalg.matrix_rank(A) #rank = 2 and is injective\n",
+    "# 3x2 Matrix multiplied against a 2x1 matrix of x variables to find that x1 = -1, x2 = 1 and z = -4\n",
+    "\n",
+    "v= np.array([1, 1, -4])\n",
+    "\n",
+    "#raise NotImplementedError()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "d9b073d418c476a9d2caeb2037175651",
+     "grade": true,
+     "grade_id": "cell-4249336ac3fddd7d",
+     "locked": true,
+     "points": 1,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "#hidden tests for problem 1.5(b) are within this cell"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "945428e5f73b0cda8357ac49f020c4a4",
+     "grade": false,
+     "grade_id": "cell-2e36a7e831e2d0cc",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "(c) A= np.array([[1,2,3],[3,4,5],[4,10,6]])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "03de4b07249f229168b7a05d4a604995",
+     "grade": false,
+     "grade_id": "cell-13a86a9d6fef18b1",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "A= np.array([[1,2,3],[3,4,5],[4,10,6]])\n",
+    "rank = np.linalg.matrix_rank(A) #rank = 3 and is bijective\n",
+    "#Solved systems of equations when multiplying A with a 3x1 vector of unknown v-values to generate [1, 2, 1]\n",
+    "\n",
+    "v= np.array([2/5, -3/10, 2/5])\n",
+    "\n",
+    "\n",
+    "#raise NotImplementedError()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "598161a5d21d2fae9324f4bbae7f12d9",
+     "grade": true,
+     "grade_id": "cell-5a1038ca25889e0b",
+     "locked": true,
+     "points": 1,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "#hidden tests for problem 1.5(c) are within this cell"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "f5397ac573f8e4b248539167e6d1a9c9",
+     "grade": false,
+     "grade_id": "cell-3d39e13d4a7cc44b",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "## Part 2: Eigenvalue/ Eigenvector\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "df04e56fb998e34ca61238cef92c5669",
+     "grade": false,
+     "grade_id": "cell-40704c107a135552",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>2.1</strong> \\[1 pt\\] What is the eigenvalue and eigenvectors of the matrix[[1,3],[2,5]]? Please store the eigenvalues in the variable called <strong>vals</strong>. The datatype for vals should be a numpy array.\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "16305e8b3dbe5512261883e62ae4e3a8",
+     "grade": false,
+     "grade_id": "cell-571f59fab4ac61a1",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "v1= np.array([[1,3],[2,5]])\n",
+    "vals= np.linalg.eig(v1)[0]\n",
+    "#raise NotImplementedError()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "324c3e2101c4d4fecd90356690b0dac0",
+     "grade": true,
+     "grade_id": "cell-174c290441138ebc",
+     "locked": true,
+     "points": 1,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "#hidden tests for problem 2.1 are within this cell"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<strong>2.2</strong> \\[1 pt\\] What are the eigenvectors of the matrix [[1,3],[2,5]]? Please store the eigenvectors in a variable called <strong>vecs</strong>. The datatype for vals should be an array.\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "025bea56b5c4864d56246aa645d3ebbf",
+     "grade": false,
+     "grade_id": "cell-ae7fca74e80f42d3",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "vecs= np.linalg.eig(v1)[1]\n",
+    "#raise NotImplementedError()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "9ba0515a9e16e22610634c0621dcc84d",
+     "grade": true,
+     "grade_id": "cell-c9c31cdf9a7b77ad",
+     "locked": true,
+     "points": 1,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "#hidden tests for problem 2.2 are within this cell"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "08d9d962857f8705c1cc6b2438e717aa",
+     "grade": false,
+     "grade_id": "cell-ce5dcd323933b2e5",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>2.3</strong> \\[2 pt\\] Find a 2 x 2 matrix with integer entries that has 10 and 25 as eigenvalues with eigen vectors $(1, 4)$ and $(1, -1)$ respectively.  Record it as an array in $ANS23$ with integer entries.  Hint: Put variables for entries in a 2 x 2 array, write out the equations that must be satisfied, and solve."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "1e8eb8b492349db1b2f39d845df39f29",
+     "grade": false,
+     "grade_id": "cell-d68d4ff3c19a01b7",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "vectors = np.array([[1, 1], [4, -1]])\n",
+    "values = np.array([[10, 0], [0, 25]])\n",
+    "vector_inv =np.linalg.inv(vectors)\n",
+    "\n",
+    "ANS23 = vectors @ values @ vector_inv\n",
+    "\n",
+    "#raise NotImplementedError()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "5a3d8beb668c2cce863f921ed996fdce",
+     "grade": true,
+     "grade_id": "cell-1b83b01be1cc2c69",
+     "locked": true,
+     "points": 2,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "assert type(ANS23) == np.ndarray, \"Problem 2.3, Your answer should be an array\"\n",
+    "assert ANS23.shape == (2, 2), \"Problem 2.3, Your array should be dimension 2 x 2\"\n",
+    "\n",
+    "assert np.isclose(ANS23 @ np.array([1, 4]), np.array([10, 40])).all(), \"Problem 2.3, Your array should have [1, 4] as an eigenvector with eigenvalue 10\"\n",
+    "\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "b06d55e1c29f85d46a4cc5ae2fdce8e8",
+     "grade": false,
+     "grade_id": "cell-e444000ecd9d564f",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "2.4 [2 pt] Use the txt files loaded at the start of this assignment to find the principal components of the Senate dataset and to make a scatterplot with PC1 on the x-axis and PC2 on the y-axis (i.e. a senator's location on the scatterplot is his/her (PC1 loading, PC2 loading)), and where each senator's dot is the color of his political party. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "dc57f1089038eb070a7370a3565c568d",
+     "grade": false,
+     "grade_id": "cell-7083c1546fc06d26",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "#Use \"iloc\" to remove the first three columns from the Senate dataset\n",
+    "Senate= Senate.iloc[:, 3:]\n",
+    "\n",
+    "#Use the sklearn \"PCA\" package loaded at the start of this assignment to find the first 5 eigenvectors and eigenvalues\n",
+    "res= PCA() #keep all components\n",
+    "pca_senators= res.fit_transform(Senate) #fit transform performs dimensionality reduction\n",
+    "eig_vals= res.explained_variance_[0:5]\n",
+    "eig_vecs= res.components_[0:5]\n",
+    "\n",
+    "#raise NotImplementedError()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "81c5d76f26c1946209666204afbcaae4",
+     "grade": true,
+     "grade_id": "cell-7fdaebc51aded0de",
+     "locked": true,
+     "points": 2,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "#hidden tests for problem 2.4 are within this cell"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "129195d1ec4994925e1b1a6f63724ee0",
+     "grade": false,
+     "grade_id": "cell-b834e91d7d38a605",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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3bp1zJo1i0ceeeSkWD/77DM6depEZmZmg3117rnncvPNNzN79mymT59eY9+gQYPqTI6pSMlLRFqNrKwsiouL2bx5M8uWLWPMmDFVo5zqRowYQceOHWnbti19+vSjbdudwDrgKqAzkEFa2o+qCvGefvpu0tKuA/KBXwObAL/y8JJLricjI4P8/HzKy8urRkj5+fns2LEDgJUrV3LxxReTn5/PihUr2LRpU1Uso0aNAmDgwIFVx1dXWlrKmWeeGdPnr6io4L333iM7O5udO3fW2NetWzf27NkT03lSgZKXiLRKl156Kfv37+fLL788aV/1UUyPHun07l1GmzYnkly7dr5WYWW5p1Wr7qZt28lACfCvwBHS0vyqx4su8udKS0sjIyOD4DFOpKWlUVZWxpEjR7jrrruYP38+JSUlTJgwgSPVHsVcGUt6ejplZWUnxZqVlVXj+Po8++yz5OXlMWfOHCZNmlQjcR85coSseO68TjIlLxFplTZv3kx5eTldunSp9zgzv2rwV78aQtu2/8UNN3zN/PllHDnyRtUxhw59w/PP59CvH6SlzcXMV50fP77+m5eBqsTTtWtXDh48yPz58+P6HH379o06Iqvtiy++YObMmcyYMYOCggJycnJ44YUXqvZv3bq16nu/MNB9XiLSalR+5wV+pfXcuXNJr31XcRQZGfCzn+XQocMv+M1vLmb69B7069ePjh07AlBUVMQ99/yInJwcJk68hA0bPmPNGl8zsSFnnHEGEyZMID8/n9zcXAbHuba+ffv2nHfeeWzbto3evXvXedy9997L1KlTq6YYZ82axZVXXsno0aPp3LkzK1eu5Iknnojr2smkqvKoqryIxObgwYNkZ2dTVlZGYWEh48aNo7CwMNlhsXDhQj788EMef/zxRrXfu3cvt956K8uXL4+rnarKi4iEQFFREZFIhLy8PHr16sVNN92U7JAAKCwsJDc3t9Htd+3axVNPPZW4gFqARl5o5CUi0hgaeYmIiMRByUtEREInKcnLzDqb2btm9mnws1Mdx71oZvvMbGOt7UVm9jczKw5eI6vte9DMtpnZFjO7rrk/i4iItLxkjbweAJY75/oAy4Pfo3kJqKtg19POuUjwWgpgZv3wtVkuDNr9i5k1vA5WRERCJVnJ60ZgbvB+LhB1yY5z7s/AV3Ge9zXn3FHn3GfANmBIUwIVEZHU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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "#run this cell to make a scatter plot using your results\n",
+    "plt.scatter(res.components_[0], res.components_[1], c=RB['Color'])\n",
+    "plt.xlabel(\"PC1\")\n",
+    "plt.ylabel(\"PC2\")\n",
+    "plt.annotate(\"Nelson (NE)\", (-0.009, -0.078))\n",
+    "plt.annotate(\"Chafee (RI)\", (0.035, -0.083))\n",
+    "plt.annotate(\"McConnell (KY)\", (-0.159, -0.112))\n",
+    "plt.annotate(\"Kennedy (MA)\", (0.145, -0.112))\n",
+    "plt.annotate(\"Menedez (NJ)\", (0.022, -0.004))\n",
+    "plt.annotate(\"Collins (ME)\", (-0.015, -0.118))\n",
+    "plt.annotate(\"Obama (IL)\", (0.065, -0.013))\n",
+    "plt.annotate(\"Burr (NC)\", (-0.063, -0.054))\n",
+    "plt.annotate(\"Bingaman (TX)\", (0.098, -0.142))\n",
+    "plt.xlim(-0.2, 0.2)\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "baa173f91504a40c93a7655ef9a905d3",
+     "grade": false,
+     "grade_id": "cell-9cd4e8d2f225fafd",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "## Part 3: Composition \n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "4d362bc5ffa395158863024f1a23b0f4",
+     "grade": false,
+     "grade_id": "cell-f0196a1e1ab90e75",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>3.1</strong> \\[1 pt\\] Assume f(x)= 3x+6 and g(y)= 2y+1, what is the reduced equation of h(x)=g * f(x)=g(f(x))? Store your answer in the variable <strong>compo</strong> as a string type that is a valid python formula.  For example, \"5 * x ** 2 + 4\".  Note that neither \"5 x ** 2 + 4\" nor \"\"5 * x ^ 2 + 4\" are valid python formulas."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "216a61b0d4d2634928a988b3dd04004b",
+     "grade": false,
+     "grade_id": "cell-81395b5bd2a197fb",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "compo=\"6 * x + 13\"\n",
+    "#raise NotImplementedError()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "ab1988a91ec4eb69484250d75267e0bd",
+     "grade": true,
+     "grade_id": "cell-f797c1459bf93874",
+     "locked": true,
+     "points": 1,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "assert type(compo) == str, \"Problem 3.1, testing compo, type of value stored in variable does not match the expected type. Expecting String.\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "81500b9d6c2a6f4024c7bc2ced1d791f",
+     "grade": false,
+     "grade_id": "cell-96318587904ad09d",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>3.2</strong> \\[1 pt\\] Given x = 1, use the equation assigned to compo to solve. Store your answer in the variable <strong>compo1</strong> as an integer. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "ecd82c5ea467a83ea08fb1821be447c1",
+     "grade": false,
+     "grade_id": "cell-beb471e3c613b1ec",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "compo1=19\n",
+    "#raise NotImplementedError()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "03b56d9f1f4e4da15b52e07523d43748",
+     "grade": true,
+     "grade_id": "cell-850259d8a0f763ca",
+     "locked": true,
+     "points": 1,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "import numbers\n",
+    "assert isinstance(compo1, numbers.Number), \"Problem 3.2, testing compo1, type of value stored in variable does not match the expected type. Expecting Integer.\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "5fb7b535cdfead0c3954b5e5cd7b678a",
+     "grade": false,
+     "grade_id": "cell-10c31810a421b502",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "## Part4: Linear Transformation "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "08ae96d45ecbf5461477b060950baf55",
+     "grade": false,
+     "grade_id": "cell-05f210a9b75f0951",
+     "locked": true,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "source": [
+    "<strong>4.1</strong> \\[2 pt\\] Assume we have an function: $f(x, y, z) = x$<sup>2</sup>$yz/3+x\\sqrt{y}$+3z =10, is this function linear in x, y, or z?  For each variable, provide a string with a nonlinear term involving that variable or the empty string if none exists.  Again, report python executable strings.  For example, the equation might be written \"(x ** 2) * y * z/3 + x * np.sqrt(y) + z + 3z = 10\" in python"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {
+    "deletable": false,
+    "nbgrader": {
+     "checksum": "4795369007a85417fa51dbf51e91e7b5",
+     "grade": false,
+     "grade_id": "cell-7cd69aa0c7535f5d",
+     "locked": false,
+     "schema_version": 1,
+     "solution": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "non_linear_X = \"(x ** 2) * y * z/3\"\n",
+    "non_linear_Y = \"x * np.sqrt(y)\"\n",
+    "non_linear_Z = \"\"\n",
+    "\n",
+    "#raise NotImplementedError()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {
+    "deletable": false,
+    "editable": false,
+    "nbgrader": {
+     "checksum": "2e6c7c4bc810ae206d61c1264f827903",
+     "grade": true,
+     "grade_id": "cell-4e6661b95f6581b7",
+     "locked": true,
+     "points": 1,
+     "schema_version": 1,
+     "solution": false
+    }
+   },
+   "outputs": [],
+   "source": [
+    "#hidden tests for problem 4.1 are within this cell"
+   ]
+  }
+ ],
+ "metadata": {
+  "coursera": {
+   "schema_names": [
+    "mads_math_methods_for_data_science_v3_assignment2"
+   ]
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
